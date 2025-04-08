@@ -14,3 +14,26 @@ print(df.isnull().sum())
 df["Literacy_Rate_Adult"].fillna(df["Literacy_Rate_Adult"].mean(), inplace = True)
 df["Dropout_Rate_Primary"].fillna(df["Dropout_Rate_Primary"].mean(), inplace = True)
 print("Missing values After Filling:\n",df.isnull().sum())
+
+# Summary of all numeric columns
+print(df.describe())
+
+# Unique states
+print("Number of Unique States:", df["State"].nunique())
+print("States:", df["State"].unique())
+
+# Year range
+print("Year Range:", df["Year"].min(), "-", df["Year"].max())
+
+
+
+# Set style
+sns.set(style="whitegrid")
+
+# Literacy Rate (Youth vs Adult)
+plt.figure(figsize=(10,5))
+sns.lineplot(data=df, x='Year', y='Literacy_Rate_Youth', label='Youth Literacy')
+sns.lineplot(data=df, x='Year', y='Literacy_Rate_Adult', label='Adult Literacy')
+plt.title("Literacy Rates Over the Years")
+plt.legend()
+plt.show()
