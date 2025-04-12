@@ -82,3 +82,87 @@ plt.xlabel("Price per Sqft")
 plt.ylabel("Frequency")
 plt.grid(True)
 plt.show()
+
+## 6. Countplot: PROPERTY_TYPE
+plt.figure(figsize=(10, 6))
+sns.countplot(y='PROPERTY_TYPE', data=df, order=df['PROPERTY_TYPE'].value_counts().index, palette='viridis')
+plt.title("Distribution of Property Types")
+plt.xlabel("Count")
+plt.ylabel("Property Type")
+plt.tight_layout()
+plt.show()
+
+## 7. Countplot: Listings by registration month
+df['REGISTER_DATE'] = pd.to_datetime(df['REGISTER_DATE'], errors='coerce')
+df['REG_MONTH'] = df['REGISTER_DATE'].dt.month
+
+plt.figure(figsize=(8, 5))
+sns.countplot(x='REG_MONTH', data=df, palette='Set2')
+plt.title("Property Listings by Month")
+plt.xlabel("Month")
+plt.ylabel("Number of Listings")
+plt.tight_layout()
+plt.show()
+
+## 8. Bar: Top PROPERTY_TYPEs by avg PRICE_SQFT
+top_property_types = df.groupby('PROPERTY_TYPE')['PRICE_SQFT'].mean().nlargest(10)
+top_property_types.plot(kind='bar', figsize=(10, 6), color='skyblue', title="Top 10 Property Types by Avg. Price per Sqft")
+plt.ylabel("Average Price per Sqft")
+plt.xlabel("Property Type")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+## 9. Lineplot: AGE vs PRICE_SQFT
+age_price = df.groupby('AGE')['PRICE_SQFT'].mean().sort_index()
+plt.figure(figsize=(10, 6))
+sns.lineplot(x=age_price.index, y=age_price.values, marker='o', color='teal')
+plt.title("Price per Sqft vs Property Age")
+plt.xlabel("Property Age (Years)")
+plt.ylabel("Average Price per Sqft")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Linear Regression: AREA vs PRICE_PER_UNIT_AREA
+scaler = MinMaxScaler()
+df[['AREA', 'PRICE_PER_UNIT_AREA']] = scaler.fit_transform(df[['AREA', 'PRICE_PER_UNIT_AREA']])
+print("\nAfter Normalization:")
+print(df[['AREA', 'PRICE_PER_UNIT_AREA']].describe())
+
+# Scatter plot
+plt.scatter(df['AREA'], df['PRICE_PER_UNIT_AREA'], color='teal')
+plt.xlabel('Area (Normalized)')
+plt.ylabel('Price per Unit Area (Normalized)')
+plt.title("ScatterPlot: Area vs Price per Unit Area")
+plt.grid(True)
+plt.show()
+
+
+
+# Model training
+X = df[['AREA']]
+y = df[['PRICE_PER_UNIT_AREA']]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict for AREA = 850 sqft
+normalized_area = pd.DataFrame({'AREA':[850]})
+predicted_price_normalized = model.predict(pd.DataFrame(normalized_area))
+print("\nPredicted Price per Unit Area for AREA = 850 sqft (Normalized): ",predicted_price_normalized)
+
+# Regression line
+plt.scatter(X, y, color='skyblue', label='Data')
+plt.plot(X, model.predict(X), color='red', linewidth=2, label='Regression Line')
+plt.xlabel("Area (Normalized)")
+plt.ylabel("Price per Unit Area (Normalized)")
+plt.title("Linear Regression Fit: Area vs Price per Unit Area")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# Model evaluation
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Square Error (MSE): {mse:.4f}")
