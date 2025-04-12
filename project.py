@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 # Load dataset
-df = pd.read_csv("/Users/rishabhshukla/Downloads/Data-Analysis-Assignment/mumbai.csv")
+df = pd.read_csv("/Users/rishabhshukla/Downloads/mumbai.csv")
 print("Initial Data Info:")
 print(df.info())
 
@@ -30,6 +30,16 @@ df['VALUE_LABEL'].fillna(df['VALUE_LABEL'].mode()[0], inplace=True)
 df['BEDROOM_NUM'].fillna(df['BEDROOM_NUM'].mode()[0],inplace=True)
 print("\nAfter Handling Missing Values:")
 print(df.info())
+
+# Analyze PRICE_SQFT
+print("\nPRICE_SQFT Statistics:")
+print(df['PRICE_SQFT'].describe())
+
+# Remove outliers using IQR
+Q1 = df['PRICE_SQFT'].quantile(0.25)
+Q3 = df['PRICE_SQFT'].quantile(0.75)
+IQR = Q3 - Q1
+filtered_df = df[(df['PRICE_SQFT'] >= Q1 - 1.5 * IQR) & (df['PRICE_SQFT'] <= Q3 + 1.5 * IQR)]
 
 ## 2. Boxplot: PRICE_SQFT vs BEDROOM_NUM
 plt.figure(figsize=(8, 6))
@@ -62,16 +72,6 @@ plt.title("Correlation Heatmap of Numeric Features")
 plt.tight_layout()
 plt.show()
 
-
-# Analyze PRICE_SQFT
-print("\nPRICE_SQFT Statistics:")
-print(df['PRICE_SQFT'].describe())
-
-# Remove outliers using IQR
-Q1 = df['PRICE_SQFT'].quantile(0.25)
-Q3 = df['PRICE_SQFT'].quantile(0.75)
-IQR = Q3 - Q1
-filtered_df = df[(df['PRICE_SQFT'] >= Q1 - 1.5 * IQR) & (df['PRICE_SQFT'] <= Q3 + 1.5 * IQR)]
 
 # Visualizations
 ## 1. Histogram: PRICE_SQFT after filtering
