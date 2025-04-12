@@ -31,6 +31,38 @@ df['BEDROOM_NUM'].fillna(df['BEDROOM_NUM'].mode()[0],inplace=True)
 print("\nAfter Handling Missing Values:")
 print(df.info())
 
+## 2. Boxplot: PRICE_SQFT vs BEDROOM_NUM
+plt.figure(figsize=(8, 6))
+sns.boxplot(x='BEDROOM_NUM', y='PRICE_SQFT', data=filtered_df, palette='Set3')
+plt.title("Price per Sqft vs Bedroom Count")
+plt.xlabel("Number of Bedrooms")
+plt.ylabel("Price per Sqft")
+plt.grid(True)
+plt.show()
+
+## 3. Barh: Average price per sqft by city
+city_avg = df.groupby('CITY')['PRICE_SQFT'].mean().sort_values()
+city_avg.plot(kind='barh', figsize=(10, 6), title="Average Price/Sqft by City", color='coral')
+plt.xlabel("Average Price per Sqft")
+plt.show()
+
+## 4. Scatterplot: MIN_AREA_SQFT vs PRICE_SQFT
+plt.figure(figsize=(8, 5))
+sns.scatterplot(x='AREA', y='PRICE_SQFT', data=filtered_df, color='purple')
+plt.title("Price vs Area")
+plt.xlabel("Area")
+plt.ylabel("Price per Sqft")
+plt.show()
+print(df[["AREA", "PRICE_SQFT"]].corr())
+
+## 5. Heatmap: Correlation matrix
+plt.figure(figsize=(10, 6))
+sns.heatmap(df.select_dtypes(include='number').corr(), cmap='coolwarm', annot=True, fmt=".2f")
+plt.title("Correlation Heatmap of Numeric Features")
+plt.tight_layout()
+plt.show()
+
+
 # Analyze PRICE_SQFT
 print("\nPRICE_SQFT Statistics:")
 print(df['PRICE_SQFT'].describe())
