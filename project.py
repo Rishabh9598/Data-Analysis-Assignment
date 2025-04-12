@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 # Load dataset
-df = pd.read_csv(r"C:\Users\raj86\OneDrive\Desktop\Python dashboard\mumbai.csv")
+df = pd.read_csv("/Users/rishabhshukla/Downloads/Data-Analysis-Assignment/mumbai.csv")
 print("Initial Data Info:")
 print(df.info())
 
