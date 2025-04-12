@@ -83,5 +83,5 @@ The analysis uses Mumbai property data containing information about:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Adityaraj86
-cd mumbai-real-estate-analysis
+git clone https://github.com/Rishabh9598
+cd Data-Analysis-Assignment
